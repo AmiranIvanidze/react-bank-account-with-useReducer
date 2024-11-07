@@ -37,6 +37,33 @@ function reducer(state, action){
           loan: 0
         }
       }
+    case "deposit":
+        return {
+          ...state,
+          balance: (state.balance + action.payload),
+        }
+    case "withdraw":
+      return {
+        ...state,
+        balance: state.balance > 0 ? (state.balance - action.payload) : 0,
+      }
+    case "requestLoan":
+      return {
+        ...state,
+        balance:  (state.balance + action.payload),
+        loan: state.loan + action.payload
+      }
+    case "payLoan":
+      return {
+        ...state,
+        loan: state.balance >= state.loan ? 0 : state.loan,
+        balance: state.balance >= state.loan ? state.balance - state.loan : state.balance
+      }
+    case "close":
+      return {
+        ...state,
+        isActive: (state.balance == 0 && state.loan == 0 ? false : true)
+      }
     default:
       return state;
   }
@@ -56,27 +83,27 @@ export default function App() {
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button onClick={() => {  dispatch({type: "deposit", payload: 150}) }} disabled={!isActive}>
           Deposit 150
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button onClick={() => { dispatch({type: "withdraw", payload: 50}) }} disabled={!isActive}>
           Withdraw 50
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button onClick={() => { dispatch({type: "requestLoan", payload: 5000}) }} disabled={!isActive}>
           Request a loan of 5000
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button onClick={() => { dispatch({type: "payLoan"}) }} disabled={!isActive}>
           Pay loan
         </button>
       </p>
       <p>
-        <button onClick={() => {}} disabled={!isActive}>
+        <button onClick={() => { dispatch({type: "close"}) }} disabled={!isActive}>
           Close account
         </button>
       </p>
